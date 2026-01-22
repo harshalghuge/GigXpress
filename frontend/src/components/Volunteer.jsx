@@ -1,10 +1,45 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { 
   Briefcase, Star, MapPin, Calendar, DollarSign, Award, 
   TrendingUp, CheckCircle, Clock, Filter, Search, Eye,
   Heart, Share2, MessageSquare, Bell, Menu, X, ChevronRight,
   Target, Trophy, Zap, Download, Settings, Upload
 } from 'lucide-react';
+
+const DEMO_JOBS = [
+  {
+    id: "demo-1",
+    title: "College Fest Volunteer",
+    organizer: "DY Patil University",
+    organizerRating: 4.7,
+    verified: true,
+    urgent: true,
+    location: "Pune",
+    distance: "2 km",
+    date: "2026-02-15",
+    duration: "Full Day",
+    workers: 10,
+    budget: "₹1200",
+    skills: ["Event Management", "Communication"]
+  },
+  {
+    id: "demo-2",
+    title: "Product Launch Helper",
+    organizer: "StartupXYZ",
+    organizerRating: 4.9,
+    verified: true,
+    urgent: false,
+    location: "Hinjewadi",
+    distance: "6 km",
+    date: "2026-02-20",
+    duration: "6 Hours",
+    workers: 6,
+    budget: "₹1500",
+    skills: ["Marketing", "Customer Handling"]
+  }
+];
+
 
 const WorkerDashboard = () => {
   const [activeTab, setActiveTab] = useState('browse');
@@ -17,54 +52,33 @@ const WorkerDashboard = () => {
     { label: 'Skill Badges', value: '8', icon: Award, color: 'from-purple-500 to-purple-600', change: '+2' }
   ];
 
-  const availableJobs = [
-    {
-      id: 1,
-      title: 'Wedding Event Staff Required',
-      organizer: 'Premium Events Co.',
-      organizerRating: 4.9,
-      location: 'Pune, Koregaon Park',
-      distance: '2.3 km',
-      date: '2025-02-15',
-      duration: 'Full Day (8 hours)',
-      pay: '₹1,500',
-      workers: '8 needed',
-      skills: ['Event Management', 'Hospitality'],
-      verified: true,
-      urgent: false
-    },
-    {
-      id: 2,
-      title: 'Marketing Campaign Volunteers',
-      organizer: 'TechStart India',
-      organizerRating: 4.7,
-      location: 'PCMC, Akurdi',
-      distance: '5.1 km',
-      date: '2025-02-10',
-      duration: 'Half Day (4 hours)',
-      pay: '₹800',
-      workers: '5 needed',
-      skills: ['Marketing', 'Communication'],
-      verified: true,
-      urgent: true
-    },
-    {
-      id: 3,
-      title: 'Tech Conference Setup',
-      organizer: 'Innovation Summit',
-      organizerRating: 4.8,
-      location: 'Pune, Hinjewadi',
-      distance: '8.7 km',
-      date: '2025-02-20',
-      duration: 'Full Day (8 hours)',
-      pay: '₹2,000',
-      workers: '4 needed',
-      skills: ['Technical', 'AV Support'],
-      verified: true,
-      urgent: false
-    }
-  ];
+  const [availableJobs, setAvailableJobs] = useState([]);
 
+useEffect(() => {
+  const storedJobs = JSON.parse(localStorage.getItem("activeJobs")) || [];
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const validStoredJobs = storedJobs
+    .filter(job => {
+      const jobDate = new Date(job.date);
+      jobDate.setHours(0, 0, 0, 0);
+      return jobDate >= today;
+    })
+    .map(job => ({
+      ...job,
+      organizer: job.organizer || "Independent Organizer",
+      organizerRating: job.organizerRating || 4.8,
+      verified: job.verified ?? true,
+      urgent: job.urgent ?? false,
+      distance: job.distance || "Nearby",
+      duration: job.duration || "Full Day"
+    }));
+
+  // 🔥 Always show demo jobs + real jobs
+  setAvailableJobs([...DEMO_JOBS, ...validStoredJobs]);
+}, []);
   const myApplications = [
     {
       id: 1,
@@ -256,7 +270,7 @@ const WorkerDashboard = () => {
                           <div>
                             <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">{job.title}</h3>
                             <div className="flex items-center gap-3 text-sm text-gray-600">
-                              <span className="font-medium hover:underline cursor-pointer">{job.organizer}</span>
+                              <span className="font-medium hover:underline cursor-pointer">{job.organizer || "Organizer"}</span>
                               {job.verified && <CheckCircle size={16} className="text-green-600" title="Verified" />}
                               <div className="flex items-center gap-1">
                                 <Star size={14} className="text-yellow-500 fill-current" />
@@ -265,13 +279,13 @@ const WorkerDashboard = () => {
                             </div>
                           </div>
                           <div className="text-right">
-                            <p className="text-3xl font-bold text-indigo-600 group-hover:scale-110 transition-transform origin-right">{job.pay}</p>
+                            <p className="text-3xl font-bold text-indigo-600 group-hover:scale-110 transition-transform origin-right">{job.budget}</p>
                             <p className="text-sm text-gray-500">per worker</p>
                           </div>
                         </div>
 
                         <div className="flex flex-wrap gap-2 mb-4">
-                          {job.skills.map((skill) => (
+                          {(job.skills || []).map((skill) => (
                             <span key={skill} className="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-sm font-medium hover:bg-indigo-100 transition-colors">
                               {skill}
                             </span>
@@ -295,7 +309,7 @@ const WorkerDashboard = () => {
                           </div>
                           <div className="flex items-center gap-2">
                             <Briefcase size={16} className="text-indigo-600" />
-                            <p className="font-medium">{job.workers}</p>
+                            <p className="font-medium">{job.workers} needed</p>
                           </div>
                           <div className="flex items-center gap-2">
                             <Clock size={16} className="text-indigo-600" />

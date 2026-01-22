@@ -5,9 +5,64 @@ import {
   Trash2, Eye, UserCheck, Award, MessageSquare, TrendingUp,
   AlertCircle, Download, BarChart3, Settings, Bell, Menu, X
 } from 'lucide-react';
+import { useEffect } from "react";
+
+
+const DEMO_JOBS = [
+  {
+    id: "demo-1",
+    title: "College Fest Volunteer",
+    location: "Pune",
+    date: "2026-02-15",
+    workers: 10,
+    applied: 18,
+    budget: "₹12,000",
+    status: "Active",
+    skills: ["Event Management", "Communication"]
+  },
+  {
+    id: "demo-2",
+    title: "Product Launch Helper",
+    location: "Hinjewadi",
+    date: "2026-02-20",
+    workers: 6,
+    applied: 9,
+    budget: "₹9,000",
+    status: "Active",
+    skills: ["Marketing", "Customer Handling"]
+  }
+];
 
 // --- Sub-Component: Create Job Modal ---
-const CreateJobModal = ({ onClose }) => (
+const CreateJobModal = ({ onClose, onCreate }) => {
+    const [form, setForm] = useState({
+    title: "",
+    location: "",
+    date: "",
+    workers: "",
+    budget: "",
+    description: ""
+  });
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = () => {
+    if (!form.title || !form.location || !form.date) return;
+
+    onCreate({
+      title: form.title,
+      location: form.location,
+      date: form.date,
+      workers: form.workers,
+      budget: `₹${form.budget}`,
+      skills: ["Event Management"], // demo
+    });
+
+    onClose();
+}; 
+ return(
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity animate-in fade-in duration-200">
       <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl scale-100 animate-in zoom-in-95 duration-200">
         <div className="p-6 border-b sticky top-0 bg-white/80 backdrop-blur-md z-10">
@@ -22,28 +77,36 @@ const CreateJobModal = ({ onClose }) => (
         <div className="p-6 space-y-6">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">Job Title *</label>
-            <input type="text" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none" placeholder="e.g., Wedding Event Staff" />
+            <input type="text" name="title" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none" placeholder="e.g., Wedding Event Staff" value={form.title}
+  onChange={handleChange}/>
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">Location *</label>
-              <input type="text" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all" placeholder="Pune, Koregaon Park" />
+              <input value={form.location} name="location"
+  onChange={handleChange} type="text" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all" placeholder="Pune, Koregaon Park" />
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">Event Date *</label>
-              <input type="date" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all" />
+              <input type="date"
+  name="date"
+  min={new Date().toISOString().split("T")[0]}
+  value={form.date}
+  onChange={handleChange} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all" />
             </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">Workers Needed *</label>
-              <input type="number" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all" placeholder="5" />
+              <input type="number" value={form.workers} name="workers"
+      onChange={handleChange} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all" placeholder="5" />
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">Budget per Worker *</label>
-              <input type="number" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all" placeholder="1500" />
+              <input type="number" value={form.budget} name="budget"
+      onChange={handleChange} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all" placeholder="1500" />
             </div>
           </div>
 
@@ -60,7 +123,9 @@ const CreateJobModal = ({ onClose }) => (
 
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">Job Description *</label>
-            <textarea className="w-full px-4 py-3 border border-gray-300 rounded-lg h-32 focus:ring-2 focus:ring-indigo-500 outline-none transition-all" placeholder="Describe responsibilities..."></textarea>
+            <textarea name="description"
+  value={form.description}
+  onChange={handleChange} className="w-full px-4 py-3 border border-gray-300 rounded-lg h-32 focus:ring-2 focus:ring-indigo-500 outline-none transition-all" placeholder="Describe responsibilities..."></textarea>
           </div>
 
           <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 flex gap-3 hover:bg-yellow-100 transition-colors">
@@ -76,19 +141,48 @@ const CreateJobModal = ({ onClose }) => (
           <button onClick={() => onClose()} className="px-6 py-3 border border-gray-300 rounded-lg font-semibold hover:bg-white hover:border-gray-400 transition-all active:scale-95">
             Cancel
           </button>
-          <button className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-semibold shadow-lg shadow-indigo-200 hover:shadow-indigo-300 hover:-translate-y-0.5 transition-all active:scale-95">
+          <button onClick={handleSubmit} className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-semibold shadow-lg shadow-indigo-200 hover:shadow-indigo-300 hover:-translate-y-0.5 transition-all active:scale-95">
             Publish Job
           </button>
         </div>
       </div>
     </div>
 );
-
+};
 // --- Main Dashboard Component ---
 const OrganizerDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [showCreateJobModal, setShowCreateJobModal] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [activeJobs, setActiveJobs] = useState(() => {
+  const savedJobs = JSON.parse(localStorage.getItem("activeJobs")) || [];
+
+  return [
+    ...DEMO_JOBS,
+    ...savedJobs
+  ];
+});
+
+  useEffect(() => {
+  const realJobs = activeJobs.filter(
+    job => !String(job.id).startsWith("demo-")
+  );
+
+  localStorage.setItem("activeJobs", JSON.stringify(realJobs));
+}, [activeJobs]);
+
+  const handleCreateJob = (newJob) => {
+  setActiveJobs((prev) => [
+    {
+      ...newJob,
+      id: Date.now(),
+      applied: 0,
+      status: "Active",
+    },
+    ...prev
+  ]);
+};
+
 
   // Mock Data
   const stats = [
@@ -98,10 +192,7 @@ const OrganizerDashboard = () => {
     { label: 'Escrow Balance', value: '₹45,000', icon: DollarSign, color: 'from-indigo-500 to-indigo-600', change: '-₹15k' }
   ];
 
-  const activeJobs = [
-    { id: 1, title: 'Wedding Event Staff Required', location: 'Pune, Koregaon Park', date: '2025-02-15', workers: 8, applied: 24, budget: '₹12,000', status: 'Active', skills: ['Event Management', 'Hospitality'] },
-    { id: 2, title: 'Marketing Campaign Volunteers', location: 'PCMC, Akurdi', date: '2025-02-10', workers: 5, applied: 15, budget: '₹8,000', status: 'Active', skills: ['Marketing', 'Communication'] }
-  ];
+  
 
   const applications = [
     { id: 1, jobTitle: 'Wedding Event Staff Required', applicant: 'Priya Sharma', rating: 4.8, completedGigs: 23, badges: ['Event Pro', 'Reliable'], appliedDate: '2025-01-20', status: 'Pending' },
@@ -411,7 +502,7 @@ const OrganizerDashboard = () => {
         </main>
       </div>
 
-      {showCreateJobModal && <CreateJobModal onClose={() => setShowCreateJobModal(false)} />}
+      {showCreateJobModal && <CreateJobModal onClose={() => setShowCreateJobModal(false)} onCreate={handleCreateJob}/>}
     </div>
   );
 };
