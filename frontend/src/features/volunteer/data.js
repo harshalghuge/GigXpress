@@ -43,6 +43,11 @@ export const completedGigs = [
     title: "New Year Party Staff",
     organizer: "Elite Events",
     date: "2025-01-01",
+    location: "Mumbai",
+    workers: "12",
+    description:
+      "Managed guest registration, stage movement, and crowd support for the New Year celebration.",
+    skills: ["Registration", "Crowd Handling", "Guest Support"],
     earned: "Rs 2,000",
     rating: 5,
     review: "Excellent work! Very professional and punctual.",
@@ -52,6 +57,11 @@ export const completedGigs = [
     title: "Corporate Conference",
     organizer: "Tech Solutions Ltd",
     date: "2024-12-20",
+    location: "Pune",
+    workers: "8",
+    description:
+      "Handled attendee onboarding, hall coordination, and speaker assistance throughout the conference.",
+    skills: ["Coordination", "Communication", "Help Desk"],
     earned: "Rs 1,800",
     rating: 4.5,
     review: "Great job! Would hire again.",

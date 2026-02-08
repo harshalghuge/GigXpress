@@ -45,9 +45,7 @@ const VolunteerDashboard = () => {
               onApply={tabActions.openApplyModal}
             />
           )}
-          {activeTab === "applications" && (
-            <ApplicationsTab applications={myApplications} />
-          )}
+          {activeTab === "applications" && <ApplicationsTab applications={myApplications} />}
           {activeTab === "completed" && <CompletedTab completedGigs={completedGigs} />}
           {activeTab === "portfolio" && (
             <PortfolioTab badges={portfolioBadges} progressLevels={progressLevels} />

@@ -1,7 +1,42 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { Download, Star } from "lucide-react";
+import JobDetailsSection from "../sections/JobDetailsSection";
 
 const CompletedTab = ({ completedGigs }) => {
+  const [openedGigId, setOpenedGigId] = useState(null);
+
+  const openedGig = useMemo(
+    () => completedGigs.find((gig) => gig.id === openedGigId) || null,
+    [completedGigs, openedGigId]
+  );
+
+  if (openedGig) {
+    return (
+      <JobDetailsSection
+        title={openedGig.title}
+        subtitle={openedGig.organizer}
+        description={openedGig.description || openedGig.review}
+        status="Completed"
+        location={openedGig.location}
+        date={openedGig.date}
+        workers={openedGig.workers}
+        pay={openedGig.earned}
+        skills={openedGig.skills}
+        rating={openedGig.rating}
+        postedText={`Completed on ${
+          openedGig.date ? new Date(openedGig.date).toLocaleDateString() : "N/A"
+        }`}
+        onBack={() => setOpenedGigId(null)}
+        primaryAction={
+          <button className="px-6 py-3 border border-indigo-600 text-indigo-600 rounded-xl font-semibold hover:bg-indigo-600 hover:text-white transition-all inline-flex items-center gap-2">
+            <Download size={18} />
+            Download Certificate
+          </button>
+        }
+      />
+    );
+  }
+
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-gray-900">Completed Gigs</h1>
@@ -10,6 +45,15 @@ const CompletedTab = ({ completedGigs }) => {
         {completedGigs.map((gig) => (
           <div
             key={gig.id}
+            onClick={() => setOpenedGigId(gig.id)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                setOpenedGigId(gig.id);
+              }
+            }}
+            role="button"
+            tabIndex={0}
             className="group bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300 border-l-4 border-green-500"
           >
             <div className="flex flex-col lg:flex-row gap-6">
@@ -52,7 +96,10 @@ const CompletedTab = ({ completedGigs }) => {
               </div>
 
               <div className="flex lg:flex-col gap-2">
-                <button className="px-6 py-2 border border-indigo-600 text-indigo-600 rounded-lg font-semibold hover:bg-indigo-600 hover:text-white transition-all flex items-center justify-center gap-2">
+                <button
+                  onClick={(event) => event.stopPropagation()}
+                  className="px-6 py-2 border border-indigo-600 text-indigo-600 rounded-lg font-semibold hover:bg-indigo-600 hover:text-white transition-all flex items-center justify-center gap-2"
+                >
                   <Download size={18} />
                   Certificate
                 </button>
@@ -66,4 +113,3 @@ const CompletedTab = ({ completedGigs }) => {
 };
 
 export default CompletedTab;
-

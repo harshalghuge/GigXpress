@@ -1,7 +1,39 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { Calendar, Clock, DollarSign, MessageSquare } from "lucide-react";
+import JobDetailsSection from "../sections/JobDetailsSection";
 
 const ApplicationsTab = ({ applications }) => {
+  const [openedApplicationId, setOpenedApplicationId] = useState(null);
+
+  const openedApplication = useMemo(
+    () => applications.find((app) => app.id === openedApplicationId) || null,
+    [applications, openedApplicationId]
+  );
+
+  if (openedApplication) {
+    return (
+      <JobDetailsSection
+        title={openedApplication.jobTitle || openedApplication.title || "Application Details"}
+        subtitle={openedApplication.organizer || "Organizer"}
+        description={openedApplication.description}
+        status={openedApplication.status}
+        location={openedApplication.location}
+        date={openedApplication.date}
+        workers={openedApplication.workers}
+        pay={openedApplication.pay}
+        skills={openedApplication.skills}
+        postedText={`Applied on ${openedApplication.appliedDate || "N/A"}`}
+        onBack={() => setOpenedApplicationId(null)}
+        primaryAction={
+          <button className="px-6 py-3 border rounded-xl font-semibold hover:bg-indigo-50 hover:text-indigo-700 inline-flex items-center gap-2">
+            <MessageSquare size={18} />
+            Message Organizer
+          </button>
+        }
+      />
+    );
+  }
+
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-gray-900">My Applications</h1>
@@ -15,6 +47,15 @@ const ApplicationsTab = ({ applications }) => {
           applications.map((app) => (
             <div
               key={app.id}
+              onClick={() => setOpenedApplicationId(app.id)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  setOpenedApplicationId(app.id);
+                }
+              }}
+              role="button"
+              tabIndex={0}
               className="group bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition-all duration-300"
             >
               <div className="flex flex-col lg:flex-row justify-between gap-4">
@@ -54,7 +95,10 @@ const ApplicationsTab = ({ applications }) => {
                 </div>
 
                 <div className="flex lg:flex-col gap-2">
-                  <button className="px-6 py-2 border rounded-lg hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-600 transition-all flex items-center justify-center gap-2">
+                  <button
+                    onClick={(event) => event.stopPropagation()}
+                    className="px-6 py-2 border rounded-lg hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-600 transition-all flex items-center justify-center gap-2"
+                  >
                     <MessageSquare size={18} />
                     Message
                   </button>
@@ -69,4 +113,3 @@ const ApplicationsTab = ({ applications }) => {
 };
 
 export default ApplicationsTab;
-

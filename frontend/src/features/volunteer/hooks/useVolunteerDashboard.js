@@ -53,6 +53,7 @@ export const useVolunteerDashboard = () => {
       id: `app-${Date.now()}`,
       jobId: selectedJob.id,
       jobTitle: selectedJob.title,
+      title: selectedJob.title,
       organizer: selectedJob.organizer || "Organizer",
       applicantName: formData.name,
       phone: formData.phone,
@@ -61,6 +62,9 @@ export const useVolunteerDashboard = () => {
       status: "Pending",
       appliedDate: new Date().toLocaleDateString(),
       date: selectedJob.date,
+      location: selectedJob.location,
+      description: selectedJob.description,
+      workers: selectedJob.workers,
       pay: selectedJob.budget || selectedJob.pay || "Volunteer",
     };
 

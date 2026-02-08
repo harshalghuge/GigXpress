@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import {
   Briefcase,
   Calendar,
@@ -13,8 +13,47 @@ import {
   Star,
   Zap,
 } from "lucide-react";
+import JobDetailsSection from "../sections/JobDetailsSection";
 
 const BrowseTab = ({ stats, availableJobs, onApply }) => {
+  const [openedJobId, setOpenedJobId] = useState(null);
+
+  const openedJob = useMemo(
+    () => availableJobs.find((job) => job.id === openedJobId) || null,
+    [availableJobs, openedJobId]
+  );
+
+  if (openedJob) {
+    return (
+      <JobDetailsSection
+        title={openedJob.title}
+        subtitle={openedJob.organizer || "Organizer"}
+        description={openedJob.description}
+        location={openedJob.location}
+        date={openedJob.date}
+        workers={openedJob.workers}
+        pay={openedJob.budget || openedJob.pay || "Volunteer"}
+        skills={openedJob.skills}
+        rating={openedJob.organizerRating}
+        postedText="Posted recently"
+        onBack={() => setOpenedJobId(null)}
+        primaryAction={
+          <button
+            onClick={() => onApply(openedJob)}
+            className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:brightness-110"
+          >
+            Apply Now
+          </button>
+        }
+        secondaryAction={
+          <button className="px-6 py-3 border rounded-xl font-semibold hover:bg-gray-50">
+            Save Gig
+          </button>
+        }
+      />
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -71,6 +110,15 @@ const BrowseTab = ({ stats, availableJobs, onApply }) => {
           availableJobs.map((job) => (
             <div
               key={job.id}
+              onClick={() => setOpenedJobId(job.id)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  setOpenedJobId(job.id);
+                }
+              }}
+              role="button"
+              tabIndex={0}
               className="group bg-white rounded-xl shadow-md p-6 hover:shadow-2xl transition-all duration-300 border-l-4 border-transparent hover:border-indigo-500"
             >
               {job.urgent && (
@@ -99,7 +147,9 @@ const BrowseTab = ({ stats, availableJobs, onApply }) => {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-3xl font-bold text-indigo-600">{job.budget || job.pay || "Volunteer"}</p>
+                      <p className="text-3xl font-bold text-indigo-600">
+                        {job.budget || job.pay || "Volunteer"}
+                      </p>
                       <p className="text-sm text-gray-500">per worker</p>
                     </div>
                   </div>
@@ -145,19 +195,37 @@ const BrowseTab = ({ stats, availableJobs, onApply }) => {
 
                 <div className="flex lg:flex-col gap-2">
                   <button
-                    onClick={() => onApply(job)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      onApply(job);
+                    }}
                     className="flex-1 lg:flex-initial px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-semibold hover:brightness-110"
                   >
                     Apply Now
                   </button>
 
-                  <button className="px-4 py-3 border rounded-lg hover:bg-indigo-50 hover:text-indigo-600" title="Preview">
+                  <button
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setOpenedJobId(job.id);
+                    }}
+                    className="px-4 py-3 border rounded-lg hover:bg-indigo-50 hover:text-indigo-600"
+                    title="Preview"
+                  >
                     <Eye size={20} />
                   </button>
-                  <button className="px-4 py-3 border rounded-lg hover:bg-pink-50 hover:text-pink-600" title="Save">
+                  <button
+                    onClick={(event) => event.stopPropagation()}
+                    className="px-4 py-3 border rounded-lg hover:bg-pink-50 hover:text-pink-600"
+                    title="Save"
+                  >
                     <Heart size={20} />
                   </button>
-                  <button className="px-4 py-3 border rounded-lg hover:bg-blue-50 hover:text-blue-600" title="Share">
+                  <button
+                    onClick={(event) => event.stopPropagation()}
+                    className="px-4 py-3 border rounded-lg hover:bg-blue-50 hover:text-blue-600"
+                    title="Share"
+                  >
                     <Share2 size={20} />
                   </button>
                 </div>
@@ -171,4 +239,3 @@ const BrowseTab = ({ stats, availableJobs, onApply }) => {
 };
 
 export default BrowseTab;
-
