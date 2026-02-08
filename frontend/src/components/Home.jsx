@@ -162,6 +162,12 @@ const [isOpen, setIsOpen] = useState(false);
                 {isOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl overflow-hidden z-10">
                     <button
+                        onClick={() => navigate("/admin")}
+                        className="w-full px-4 py-3 text-left text-gray-700 hover:bg-indigo-50 transition"
+                        >
+                      Admin
+                    </button>
+                    <button
                         onClick={() => navigate("/volunteer")}
                         className="w-full px-4 py-3 text-left text-gray-700 hover:bg-indigo-50 transition"
                         >
@@ -180,6 +186,28 @@ const [isOpen, setIsOpen] = useState(false);
 
             <button className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
               {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+               {isOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl overflow-hidden z-10">
+                    <button
+                        onClick={() => navigate("/admin")}
+                        className="w-full px-4 py-3 text-left text-gray-700 hover:bg-indigo-50 transition"
+                        >
+                      Admin
+                    </button>
+                    <button
+                        onClick={() => navigate("/volunteer")}
+                        className="w-full px-4 py-3 text-left text-gray-700 hover:bg-indigo-50 transition"
+                        >
+                      Volunteer
+                    </button>
+                    <button
+                      onClick={() => navigate("/organizer")}
+                      className="w-full px-4 py-3 text-left text-gray-700 hover:bg-indigo-50 transition"
+                    >
+                      Organizer
+                    </button>
+                  </div>
+                )}
             </button>
           </div>
         </div>
@@ -193,6 +221,12 @@ const [isOpen, setIsOpen] = useState(false);
               <button className="block w-full text-left py-2 text-indigo-600 font-semibold">Login</button>
               <button className="w-full px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg">
                 Get Started
+              </button>
+              <button
+                onClick={() => navigate("/admin")}
+                className="w-full px-6 py-2.5 border border-indigo-200 text-indigo-700 rounded-lg"
+              >
+                Go to Admin
               </button>
             </div>
           </div>
