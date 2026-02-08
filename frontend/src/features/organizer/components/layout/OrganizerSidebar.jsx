@@ -30,7 +30,7 @@ const OrganizerSidebar = ({
     <aside
       className={`${
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
-      } lg:translate-x-0 fixed  min-h-screen lg:static inset-y-0 left-0 z-30 w-64 bg-white border-r transition-transform duration-300 ease-in-out overlfow-hidden `}
+      } lg:translate-x-0 fixed top-16 bottom-0 lg:static left-0 z-30 w-64 bg-white border-r transition-transform duration-300 ease-in-out overflow-hidden`}
     >
       <div className="p-6 space-y-6 pt-4">
         <button

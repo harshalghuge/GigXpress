@@ -25,7 +25,7 @@ const VolunteerSidebar = ({ activeTab, setActiveTab, sidebarOpen }) => {
     <aside
       className={`${
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
-      } lg:translate-x-0 fixed lg:static inset-y-0 left-0 z-30 w-64 bg-white border-r transition-transform duration-300 ease-in-out shadow-xl lg:shadow-none overflow-hidden`}
+      } lg:translate-x-0 fixed lg:static top-16 bottom-0 left-0 z-30 w-64 bg-white border-r transition-transform duration-300 ease-in-out shadow-xl lg:shadow-none overflow-hidden`}
     >
       
       <div className="p-6  space-y-6 pt-4">
@@ -70,4 +70,3 @@ const VolunteerSidebar = ({ activeTab, setActiveTab, sidebarOpen }) => {
 };
 
 export default VolunteerSidebar;
-

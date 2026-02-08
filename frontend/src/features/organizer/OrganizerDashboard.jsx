@@ -42,7 +42,7 @@ const OrganizerDashboard = () => {
     <div className="min-h-screen bg-gray-50 font-sans antialiased text-gray-900">
       <OrganizerHeader onToggleSidebar={() => setSidebarOpen((open) => !open)} />
 
-      <div className="flex h-screen overflow-hidden">
+      <div className="flex h-[calc(100vh-4rem)] overflow-hidden">
         <OrganizerSidebar
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -107,4 +107,3 @@ const OrganizerDashboard = () => {
 };
 
 export default OrganizerDashboard;
-
