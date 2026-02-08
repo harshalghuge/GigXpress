@@ -35,13 +35,14 @@ const Home = () => {
       text: "The platform is so easy to use! I love the location-based job matching. Found gigs right in my neighborhood."
     }
   ];
+  const testimonialsLength = testimonials.length;
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
+      setActiveTestimonial((prev) => (prev + 1) % testimonialsLength);
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [testimonialsLength]);
 
   const features = [
     {

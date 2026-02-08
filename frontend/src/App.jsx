@@ -1,8 +1,8 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./components/Home";
 import React from "react";
-import OrganizerDashboard from "./components/Organizer";
-import WorkerDashboard from "./components/Volunteer";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Home from "./components/Home";
+import OrganizerDashboard from "./features/organizer/OrganizerDashboard";
+import VolunteerDashboard from "./features/volunteer/VolunteerDashboard";
 
 function App() {
   return (
@@ -10,8 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/organizer" element={<OrganizerDashboard />} />
-        <Route path="/volunteer" element={<WorkerDashboard />} />
-
+        <Route path="/volunteer" element={<VolunteerDashboard />} />
       </Routes>
     </BrowserRouter>
   );
